@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
+<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+</div>
+
+# SNF Forms Concierge
+
+SNF Forms Concierge is an AI-powered voice assistant designed for [SNF Printing](https://snfforms.vercel.app/). It provides expert knowledge on medical forms and supplies, allowing users to interact naturally using voice and receive real-time assistance.
+
+## Features
+
+- **Gemini Live Integration:** Real-time multimodal voice interaction powered by the `gemini-2.5-flash-native-audio-preview` model.
+- **Secure Ephemeral Tokens:** Architecture protects your API key by generating short-lived session tokens on the server.
+- **Form Catalog Tooling:** Specialized tools to list, search, and retrieve detailed information about medical forms directly from the SNF Forms API.
+- **3D Audio Visualization:** Immersive real-time audio visualization using Three.js and custom GLSL shaders.
+- **Live Transcriptions:** Real-time display of both user and agent speech for better accessibility and clarity.
+- **Company Context:** Pre-configured with deep knowledge of SNF Printing's history, mission, and contact information.
+
+## Tech Stack
+
+- **Framework:** [Next.js 15+](https://nextjs.org/) (App Router)
+- **Frontend library:** [React 19](https://react.dev/)
+- **Visuals:** [Three.js](https://threejs.org/)
+- **AI Backend:** [@google/genai](https://www.npmjs.com/package/@google/genai) (Gemini Live API)
+- **Security:** Server-side token provisioning via Next.js Route Handlers.
+- **Language:** [TypeScript](https://www.typescriptlang.org/)
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- [Node.js](https://nodejs.org/) (v18 or later recommended)
+- A Gemini API Key from [Google AI Studio](https://aistudio.google.com/)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1.  **Clone the repository:**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+    ```bash
+    git clone https://github.com/EthanThatOneKid/concierge.snfforms.com.git
+    cd concierge.snfforms.com
+    ```
 
-## Learn More
+2.  **Install dependencies:**
 
-To learn more about Next.js, take a look at the following resources:
+    ```bash
+    npm install
+    ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3.  **Configure Environment Variables:**
+    Create a `.env.local` file in the root directory and add your Gemini API key (Ensure it does **not** have the `NEXT_PUBLIC_` prefix for security):
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+    ```env
+    GEMINI_API_KEY=your_api_key_here
+    ```
 
-## Deploy on Vercel
+4.  **Run the application:**
+    ```bash
+    npm run dev
+    ```
+    The app will be available at `http://localhost:3000`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Usage
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Click the red circle button** to start recording and talk to the concierge.
+- **Click the black square button** to stop recording.
+- **Click the reset button** (circular arrow) to clear the current session and start fresh.
+
+---
+
+© 2026 SNF Printing. Precision printing for the healthcare industry.
