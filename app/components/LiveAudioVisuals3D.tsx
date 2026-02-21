@@ -122,10 +122,9 @@ export default function LiveAudioVisuals3D({ inputNode, outputNode }: Props) {
       const dPR = renderer.getPixelRatio();
       const w = window.innerWidth;
       const h = window.innerHeight;
-      (backdrop.material as THREE.RawShaderMaterial).uniforms.resolution.value.set(
-        w * dPR,
-        h * dPR,
-      );
+      (
+        backdrop.material as THREE.RawShaderMaterial
+      ).uniforms.resolution.value.set(w * dPR, h * dPR);
       renderer.setSize(w, h);
       composer.setSize(w, h);
     }
@@ -149,12 +148,24 @@ export default function LiveAudioVisuals3D({ inputNode, outputNode }: Props) {
       backdropMat.uniforms.rand.value = Math.random() * 10000;
 
       if (sphereMaterial.userData.shader) {
-        const outData1 = outputAnalyserRef.current ? outputAnalyserRef.current.data[1] : 0;
-        const outData0 = outputAnalyserRef.current ? outputAnalyserRef.current.data[0] : 0;
-        const outData2 = outputAnalyserRef.current ? outputAnalyserRef.current.data[2] : 0;
-        const inData1 = inputAnalyserRef.current ? inputAnalyserRef.current.data[1] : 0;
-        const inData0 = inputAnalyserRef.current ? inputAnalyserRef.current.data[0] : 0;
-        const inData2 = inputAnalyserRef.current ? inputAnalyserRef.current.data[2] : 0;
+        const outData1 = outputAnalyserRef.current
+          ? outputAnalyserRef.current.data[1]
+          : 0;
+        const outData0 = outputAnalyserRef.current
+          ? outputAnalyserRef.current.data[0]
+          : 0;
+        const outData2 = outputAnalyserRef.current
+          ? outputAnalyserRef.current.data[2]
+          : 0;
+        const inData1 = inputAnalyserRef.current
+          ? inputAnalyserRef.current.data[1]
+          : 0;
+        const inData0 = inputAnalyserRef.current
+          ? inputAnalyserRef.current.data[0]
+          : 0;
+        const inData2 = inputAnalyserRef.current
+          ? inputAnalyserRef.current.data[2]
+          : 0;
 
         sphere.scale.setScalar(1 + (0.2 * outData1) / 255);
 
@@ -171,7 +182,8 @@ export default function LiveAudioVisuals3D({ inputNode, outputNode }: Props) {
         camera.position.copy(vector);
         camera.lookAt(sphere.position);
 
-        sphereMaterial.userData.shader.uniforms.time.value += (dt * 0.1 * outData0) / 255;
+        sphereMaterial.userData.shader.uniforms.time.value +=
+          (dt * 0.1 * outData0) / 255;
         sphereMaterial.userData.shader.uniforms.inputData.value.set(
           (1 * inData0) / 255,
           (0.1 * inData1) / 255,
