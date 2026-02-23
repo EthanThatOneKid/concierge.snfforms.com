@@ -22,6 +22,13 @@ export async function GET() {
             responseModalities: [Modality.AUDIO],
             systemInstruction,
             tools: [{ functionDeclarations }],
+            speechConfig: {
+              voiceConfig: {
+                prebuiltVoiceConfig: {
+                  voiceName: 'Enceladus',
+                },
+              },
+            },
             inputAudioTranscription: {},
             outputAudioTranscription: {},
           },
