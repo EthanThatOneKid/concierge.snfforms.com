@@ -1,7 +1,7 @@
 import { GoogleGenAI, Modality } from '@google/genai';
 import { NextResponse } from 'next/server';
-import { systemInstruction } from '../../components/system';
-import { functionDeclarations } from '../../components/catalog';
+import { systemInstruction } from '@/components/system';
+import { functionDeclarations } from '@/components/catalog';
 
 export async function GET() {
   try {
@@ -22,6 +22,8 @@ export async function GET() {
             responseModalities: [Modality.AUDIO],
             systemInstruction,
             tools: [{ functionDeclarations }],
+            inputAudioTranscription: {},
+            outputAudioTranscription: {},
           },
         },
         httpOptions: {
