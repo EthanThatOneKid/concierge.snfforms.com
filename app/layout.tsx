@@ -11,7 +11,6 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Organization',

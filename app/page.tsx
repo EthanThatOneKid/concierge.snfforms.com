@@ -6,6 +6,11 @@ export const metadata: Metadata = {
   title: 'AI Voice Concierge | SNF Printing',
   description:
     'Precision printing and easy access to medical forms and supplies for the healthcare industry.',
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/apple-icon.png',
+  },
   openGraph: {
     title: 'SNF Printing AI Voice Concierge',
     description:
