@@ -19,7 +19,8 @@ export class Analyser {
   }
 
   update() {
-    this.analyser.getByteFrequencyData(this.dataArray as unknown as Uint8Array);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.analyser.getByteFrequencyData(this.dataArray as any);
   }
 
   get data() {
