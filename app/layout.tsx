@@ -11,12 +11,13 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-const jsonLd = {
+const organizationJsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'Organization',
+  '@type': 'LocalBusiness',
+  '@id': 'https://snfforms.com',
   name: 'SNF Printing',
-  url: 'https://concierge.snfforms.com',
-  logo: 'https://snfforms.vercel.app/logo.png', // Assuming logo path
+  url: 'https://snfforms.com',
+  logo: 'https://snfforms.vercel.app/logo.png',
   description:
     'Precision printing and easy access to medical forms and supplies for the healthcare industry.',
   address: {
@@ -24,7 +25,7 @@ const jsonLd = {
     streetAddress: '15532 Computer Lane',
     addressLocality: 'Huntington Beach',
     addressRegion: 'CA',
-    postalCode: '92649', // Standard zipcode for that area, but I'll stick to what I know or just omit it if not in company.ts
+    postalCode: '92649',
     addressCountry: 'US',
   },
   contactPoint: {
@@ -39,6 +40,39 @@ const jsonLd = {
   },
 };
 
+const softwareAppJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'SNF Printing AI Voice Concierge',
+  url: 'https://concierge.snfforms.com',
+  image: 'https://concierge.snfforms.com/brand-logo.png',
+  description:
+    'An AI-powered voice concierge that helps healthcare professionals find and order medical forms and supplies from SNF Printing with real-time voice interaction.',
+  applicationCategory: 'BusinessApplication',
+  operatingSystem: 'Web',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+  featureList: [
+    'AI-powered voice assistant',
+    'Real-time voice interaction',
+    'Medical forms catalog search',
+    'Healthcare supply ordering assistance',
+    'Natural language query support',
+  ],
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: 'https://concierge.snfforms.com',
+    description: 'Ask the AI Voice Concierge about medical forms and supplies',
+  },
+  publisher: {
+    '@id': 'https://snfforms.com',
+  },
+  additionalType: 'https://schema.org/AIApplication',
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -46,13 +80,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationJsonLd),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(softwareAppJsonLd),
+          }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
         {children}
       </body>
     </html>
