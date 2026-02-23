@@ -328,7 +328,7 @@ export default function LiveAudio() {
       mediaStreamRef.current = null;
     }
 
-    setStatus('Recording stopped. Click Start to begin again.');
+    setStatus('Recording stopped. Click to begin again.');
   };
 
   const reset = () => {
@@ -445,7 +445,8 @@ export default function LiveAudio() {
           flexDirection: 'column',
           alignItems: 'center',
           gap: '24px',
-          background: 'linear-gradient(to top, rgba(16, 12, 20, 0.9) 0%, transparent 100%)',
+          background:
+            'linear-gradient(to top, rgba(16, 12, 20, 0.9) 0%, transparent 100%)',
           backdropFilter: 'blur(4px)',
         }}
       >
@@ -455,115 +456,142 @@ export default function LiveAudio() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '20px',
+            gap: '32px',
           }}
         >
-          <button
-            onClick={reset}
-            title="Reset Session"
-            style={{
-              outline: 'none',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
-              color: 'white',
-              borderRadius: '50%',
-              background: 'rgba(255, 255, 255, 0.05)',
-              backdropFilter: 'blur(8px)',
-              width: '56px',
-              height: '56px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transition: 'all 0.2s ease',
-            }}
-            onMouseOver={(e) => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)')}
-            onMouseOut={(e) => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)')}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="28px"
-              viewBox="0 -960 960 960"
-              width="28px"
-              fill="#ffffff"
-            >
-              <path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-110h80v280H520v-80h168q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h84q-28 106-114 173t-196 67Z" />
-            </svg>
-          </button>
-
           {!isRecording ? (
             <button
               onClick={startRecording}
-              title="Start Recording"
+              title="Call SNF Printing"
               style={{
                 outline: 'none',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
+                border: '1px solid rgba(75, 255, 75, 0.2)',
                 color: 'white',
                 borderRadius: '50%',
-                background: 'rgba(200, 0, 0, 0.15)',
-                backdropFilter: 'blur(8px)',
-                width: '72px',
-                height: '72px',
+                background: 'rgba(40, 180, 40, 0.15)',
+                backdropFilter: 'blur(12px)',
+                width: '80px',
+                height: '80px',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                transition: 'all 0.2s ease',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                boxShadow: '0 8px 32px rgba(40, 180, 40, 0.2)',
               }}
-              onMouseOver={(e) => (e.currentTarget.style.background = 'rgba(200, 0, 0, 0.25)')}
-              onMouseOut={(e) => (e.currentTarget.style.background = 'rgba(200, 0, 0, 0.15)')}
+              onMouseOver={(e) => {
+                e.currentTarget.style.background = 'rgba(40, 180, 40, 0.25)';
+                e.currentTarget.style.transform = 'scale(1.05)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.background = 'rgba(40, 180, 40, 0.15)';
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
             >
               <svg
-                viewBox="0 0 100 100"
-                width="28px"
-                height="28px"
-                fill="#ff4444"
                 xmlns="http://www.w3.org/2000/svg"
+                height="32px"
+                viewBox="0 0 24 24"
+                width="32px"
+                fill="#4bff4b"
               >
-                <circle cx="50" cy="50" r="50" />
+                <path d="M0 0h24v24H0V0z" fill="none" />
+                <path d="M6.62 10.79c1.44 2.83 3.76 5.15 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
               </svg>
             </button>
           ) : (
-            <button
-              onClick={stopRecording}
-              title="Stop Recording"
-              style={{
-                outline: 'none',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
-                color: 'white',
-                borderRadius: '50%',
-                background: 'rgba(255, 255, 255, 0.15)',
-                backdropFilter: 'blur(8px)',
-                width: '72px',
-                height: '72px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all 0.2s ease',
-              }}
-            >
-              <svg
-                viewBox="0 0 100 100"
-                width="24px"
-                height="24px"
-                fill="white"
-                xmlns="http://www.w3.org/2000/svg"
+            <>
+              <button
+                onClick={reset}
+                title="Restart Connection"
+                style={{
+                  outline: 'none',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  color: 'white',
+                  borderRadius: '50%',
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  backdropFilter: 'blur(12px)',
+                  width: '56px',
+                  height: '56px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.2s ease',
+                }}
+                onMouseOver={(e) =>
+                  (e.currentTarget.style.background =
+                    'rgba(255, 255, 255, 0.15)')
+                }
+                onMouseOut={(e) =>
+                  (e.currentTarget.style.background =
+                    'rgba(255, 255, 255, 0.05)')
+                }
               >
-                <rect x="0" y="0" width="100" height="100" rx="15" />
-              </svg>
-            </button>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="24px"
+                  viewBox="0 -960 960 960"
+                  width="24px"
+                  fill="#ffffff"
+                >
+                  <path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-110h80v280H520v-80h168q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h84q-28 106-114 173t-196 67Z" />
+                </svg>
+              </button>
+
+              <button
+                onClick={stopRecording}
+                title="End Call"
+                style={{
+                  outline: 'none',
+                  border: '1px solid rgba(255, 75, 75, 0.2)',
+                  color: 'white',
+                  borderRadius: '50%',
+                  background: 'rgba(180, 40, 40, 0.2)',
+                  backdropFilter: 'blur(12px)',
+                  width: '80px',
+                  height: '80px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  boxShadow: '0 8px 32px rgba(180, 40, 40, 0.3)',
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.background = 'rgba(180, 40, 40, 0.35)';
+                  e.currentTarget.style.transform = 'scale(1.05)';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.background = 'rgba(180, 40, 40, 0.2)';
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="32px"
+                  viewBox="0 0 24 24"
+                  width="32px"
+                  fill="#ff4b4b"
+                >
+                  <path d="M0 0h24v24H0V0z" fill="none" />
+                  <path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9l-2.03 1.01c-.14.07-.3.11-.46.11-.27 0-.53-.11-.7-.3l-1.45-1.45c-.19-.19-.3-.45-.3-.72 0-.27.11-.53.3-.72C4.16 9.4 8.16 7 12 7s7.84 2.4 9.85 4.65c.19.19.3.45.3.72 0 .27-.11.53-.3.72l-1.45 1.45c-.17.19-.43.3-.7.3-.16 0-.32-.04-.46-.11l-2.03-1.01c-.33-.16-.56-.51-.56-.9v-3.1c-1.45-.47-3-.72-4.6-.72z" />
+                </svg>
+              </button>
+            </>
           )}
         </div>
 
         <div
           id="status"
           style={{
-            color: 'rgba(255, 255, 255, 0.7)',
-            fontSize: '0.9rem',
+            color: 'rgba(255, 255, 255, 0.5)',
+            fontSize: '0.85rem',
             textAlign: 'center',
             minHeight: '1.2em',
-            fontWeight: 500,
-            letterSpacing: '0.02em',
+            fontWeight: 400,
+            letterSpacing: '0.05em',
+            textTransform: 'uppercase',
           }}
         >
           {error || status}
