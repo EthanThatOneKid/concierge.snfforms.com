@@ -2,19 +2,20 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import {
+  type FunctionResponse,
   GoogleGenAI,
   LiveServerMessage,
   Modality,
   Session,
-  type FunctionResponse,
 } from '@google/genai';
 import {
-  listForms,
-  getForm,
-  searchForms,
   functionDeclarations,
+  getForm,
+  listForms,
+  searchForms,
 } from './catalog';
 import { companyInfo } from './company';
+import { systemInstruction } from './system';
 import { createBlob, decode, decodeAudioData } from './utils';
 import LiveAudioVisuals3D from './LiveAudioVisuals3D';
 
@@ -24,14 +25,15 @@ export default function LiveAudio() {
   const [error, setError] = useState('');
   const [userTranscript, setUserTranscript] = useState('');
   const [agentTranscript, setAgentTranscript] = useState('');
+  const [isAudioInitialized, setIsAudioInitialized] = useState(false);
 
   const clientRef = useRef<GoogleGenAI | null>(null);
   const sessionRef = useRef<Session | null>(null);
   const inputAudioContextRef = useRef<AudioContext | null>(null);
   const outputAudioContextRef = useRef<AudioContext | null>(null);
 
-  const [inputNode, setInputNode] = useState<AudioNode | null>(null);
-  const [outputNode, setOutputNode] = useState<AudioNode | null>(null);
+  const inputNodeRef = useRef<GainNode | null>(null);
+  const outputNodeRef = useRef<GainNode | null>(null);
 
   const nextStartTimeRef = useRef(0);
   const mediaStreamRef = useRef<MediaStream | null>(null);
@@ -50,16 +52,11 @@ export default function LiveAudio() {
       window.AudioContext || (window as any).webkitAudioContext
     )({ sampleRate: 24000 });
 
-    const inNode = inputAudioContextRef.current.createGain();
-    const outNode = outputAudioContextRef.current.createGain();
-    outNode.connect(outputAudioContextRef.current.destination);
+    inputNodeRef.current = inputAudioContextRef.current.createGain();
+    outputNodeRef.current = outputAudioContextRef.current.createGain();
+    outputNodeRef.current.connect(outputAudioContextRef.current.destination);
 
-    setInputNode(inNode);
-    setOutputNode(outNode);
-
-    clientRef.current = new GoogleGenAI({
-      apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY,
-    });
+    setIsAudioInitialized(true);
 
     initSession();
 
@@ -81,11 +78,22 @@ export default function LiveAudio() {
   const initSession = async () => {
     const model = 'gemini-2.5-flash-native-audio-preview-09-2025';
 
-    if (!clientRef.current || !outputAudioContextRef.current) return;
+    if (!outputAudioContextRef.current) return;
 
     nextStartTimeRef.current = outputAudioContextRef.current.currentTime;
 
     try {
+      setStatus('Fetching secure token...');
+      const response = await fetch('/api/gemini-token');
+      if (!response.ok) {
+        throw new Error('Failed to fetch secure token');
+      }
+      const data = await response.json();
+      clientRef.current = new GoogleGenAI({
+        apiKey: data.token,
+        httpOptions: { apiVersion: 'v1alpha' },
+      });
+
       sessionRef.current = await clientRef.current.live.connect({
         model: model,
         callbacks: {
@@ -141,7 +149,7 @@ export default function LiveAudio() {
             if (
               audio?.data &&
               outputAudioContextRef.current &&
-              outNodeExists()
+              outputNodeRef.current
             ) {
               nextStartTimeRef.current = Math.max(
                 nextStartTimeRef.current,
@@ -156,7 +164,7 @@ export default function LiveAudio() {
               );
               const source = outputAudioContextRef.current.createBufferSource();
               source.buffer = audioBuffer;
-              source.connect(getOutputNode()!);
+              source.connect(outputNodeRef.current);
               source.addEventListener('ended', () => {
                 sourcesRef.current.delete(source);
               });
@@ -200,21 +208,7 @@ export default function LiveAudio() {
         },
         config: {
           responseModalities: [Modality.AUDIO],
-          systemInstruction:
-            `You are an expert on SNF Forms and the company SNF Printing. ` +
-            `Company Information: ` +
-            `${companyInfo.name} - ${companyInfo.description} ` +
-            `Location: ${companyInfo.location.fullAddress}. ` +
-            `Contact: Email ${companyInfo.contact.email}, Phone ${companyInfo.contact.phone}, Fax ${companyInfo.contact.fax}. ` +
-            `History: ${companyInfo.history} ` +
-            `Mission: ${companyInfo.mission} ` +
-            'When the user asks about forms, always use the provided tools to look up accurate information. ' +
-            "When searching for forms, use broad, concise keywords (e.g., 'Psychosocial' instead of 'Psychosocial form') to maximize search results. " +
-            'You can list forms, search for specific forms, or get details about a single form. ' +
-            'If asked about visual details like color, size, or paper type, DO NOT say you lack access to visual details. ' +
-            'Instead, use the search tool to identify the form, then get it to read the relevant details from the tool response. ' +
-            'Present the information in a clear and engaging way. ' +
-            'If the search returns no results, let the user know and suggest alternative queries.',
+          systemInstruction,
           tools: [{ functionDeclarations }],
           inputAudioTranscription: {},
           outputAudioTranscription: {},
@@ -229,29 +223,14 @@ export default function LiveAudio() {
     }
   };
 
-  // Helper getters to use latest state inside closures
-  const outNodeExists = () => {
-    return !!outputAudioContextRef.current;
-  };
-
-  const getOutputNode = () => {
-    // In a callback we might need the latest state. We can track it through state, but refs are safer for closures.
-    // We rely on the initial outNode setup which stays intact.
-    // Actually setOutputNode is called once, so outputNode closure might be stale.
-    // Let's use a workaround for AudioNodes if we're not using refs.
-    return document.querySelector('canvas') ? (window as any).__outNode : null;
-  };
-
-  // Improved way to bind nodes to be accessed in closures
-  useEffect(() => {
-    (window as any).__outNode = outputNode;
-  }, [outputNode]);
+  // No-op for parity logic
+  useEffect(() => {}, []);
 
   const startRecording = async () => {
     if (
       isRecording ||
       !inputAudioContextRef.current ||
-      !inputNode ||
+      !inputNodeRef.current ||
       !sessionRef.current
     ) {
       return;
@@ -272,7 +251,7 @@ export default function LiveAudio() {
       const source =
         inputAudioContextRef.current.createMediaStreamSource(stream);
       sourceNodeRef.current = source;
-      source.connect(inputNode);
+      source.connect(inputNodeRef.current);
 
       const bufferSize = 256;
       const scriptProcessor =
@@ -339,7 +318,12 @@ export default function LiveAudio() {
         backgroundColor: '#100c14',
       }}
     >
-      <LiveAudioVisuals3D inputNode={inputNode} outputNode={outputNode} />
+      {isAudioInitialized && (
+        <LiveAudioVisuals3D
+          inputNode={inputNodeRef.current}
+          outputNode={outputNodeRef.current}
+        />
+      )}
 
       <div
         className="controls"

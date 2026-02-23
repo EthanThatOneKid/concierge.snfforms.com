@@ -1,9 +1,14 @@
 import { GoogleGenAI, Modality } from '@google/genai';
 import { NextResponse } from 'next/server';
+import { systemInstruction } from '../../components/system';
+import { functionDeclarations } from '../../components/catalog';
 
 export async function GET() {
   try {
-    const client = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    const client = new GoogleGenAI({
+      apiKey: process.env.GEMINI_API_KEY,
+      httpOptions: { apiVersion: 'v1alpha' },
+    });
     const expireTime = new Date(Date.now() + 30 * 60 * 1000).toISOString();
 
     const token = await client.authTokens.create({
@@ -15,6 +20,8 @@ export async function GET() {
           config: {
             temperature: 0.7,
             responseModalities: [Modality.AUDIO],
+            systemInstruction,
+            tools: [{ functionDeclarations }],
           },
         },
         httpOptions: {
