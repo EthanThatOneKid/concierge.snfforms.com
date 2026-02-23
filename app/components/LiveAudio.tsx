@@ -347,177 +347,227 @@ export default function LiveAudio() {
         height: '100vh',
         overflow: 'hidden',
         backgroundColor: '#100c14',
+        display: 'flex',
+        flexDirection: 'column',
+        fontFamily: "'Inter', system-ui, sans-serif",
       }}
     >
-      {isAudioInitialized && (
-        <LiveAudioVisuals3D
-          inputNode={inputNodeRef.current}
-          outputNode={outputNodeRef.current}
-        />
-      )}
-
+      {/* 3D Core Visuals (Background-like but interactive) */}
       <div
-        className="controls"
         style={{
-          zIndex: 10,
           position: 'absolute',
-          bottom: '10vh',
+          top: 0,
           left: 0,
-          right: 0,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: 'column',
-          gap: '10px',
+          width: '100%',
+          height: '100%',
+          zIndex: 1,
         }}
       >
-        {!isRecording && (
+        {isAudioInitialized && (
+          <LiveAudioVisuals3D
+            inputNode={inputNodeRef.current}
+            outputNode={outputNodeRef.current}
+          />
+        )}
+      </div>
+
+      {/* Top Section: Transcripts */}
+      <div
+        id="captions-container"
+        style={{
+          zIndex: 10,
+          flex: '0 0 auto',
+          padding: '20px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '12px',
+          pointerEvents: 'none',
+          maxHeight: '40vh',
+          overflowY: 'auto',
+          maskImage: 'linear-gradient(to bottom, black 80%, transparent 100%)',
+        }}
+      >
+        {userTranscript && (
+          <div
+            style={{
+              fontSize: 'clamp(1rem, 2.5vw, 1.25rem)',
+              lineHeight: '1.6',
+              padding: '12px 24px',
+              borderRadius: '16px',
+              maxWidth: '900px',
+              width: 'fit-content',
+              color: '#a8d8ff',
+              background: 'rgba(168, 216, 255, 0.08)',
+              backdropFilter: 'blur(12px)',
+              border: '1px solid rgba(168, 216, 255, 0.2)',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+              textAlign: 'center',
+              pointerEvents: 'auto',
+            }}
+          >
+            {userTranscript}
+          </div>
+        )}
+        {agentTranscript && (
+          <div
+            style={{
+              fontSize: 'clamp(1rem, 2.5vw, 1.25rem)',
+              lineHeight: '1.6',
+              padding: '12px 24px',
+              borderRadius: '16px',
+              maxWidth: '900px',
+              width: 'fit-content',
+              color: '#ffd6a8',
+              background: 'rgba(255, 214, 168, 0.08)',
+              backdropFilter: 'blur(12px)',
+              border: '1px solid rgba(255, 214, 168, 0.2)',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+              textAlign: 'center',
+              pointerEvents: 'auto',
+            }}
+          >
+            {agentTranscript}
+          </div>
+        )}
+      </div>
+
+      {/* Middle Spacing (Reserved for the 3D Orb visibility) */}
+      <div style={{ flex: '1 1 auto', pointerEvents: 'none' }} />
+
+      {/* Bottom Section: Controls & Status */}
+      <div
+        style={{
+          zIndex: 10,
+          flex: '0 0 auto',
+          padding: '40px 20px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '24px',
+          background: 'linear-gradient(to top, rgba(16, 12, 20, 0.9) 0%, transparent 100%)',
+          backdropFilter: 'blur(4px)',
+        }}
+      >
+        <div
+          className="controls"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '20px',
+          }}
+        >
           <button
             onClick={reset}
+            title="Reset Session"
             style={{
               outline: 'none',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
               color: 'white',
-              borderRadius: '12px',
-              background: 'rgba(255, 255, 255, 0.1)',
-              width: '64px',
-              height: '64px',
+              borderRadius: '50%',
+              background: 'rgba(255, 255, 255, 0.05)',
+              backdropFilter: 'blur(8px)',
+              width: '56px',
+              height: '56px',
               cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.2s ease',
             }}
+            onMouseOver={(e) => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)')}
+            onMouseOut={(e) => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)')}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              height="40px"
+              height="28px"
               viewBox="0 -960 960 960"
-              width="40px"
+              width="28px"
               fill="#ffffff"
-              style={{ margin: 'auto' }}
             >
               <path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-110h80v280H520v-80h168q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h84q-28 106-114 173t-196 67Z" />
             </svg>
           </button>
-        )}
 
-        {!isRecording ? (
-          <button
-            onClick={startRecording}
-            style={{
-              outline: 'none',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              color: 'white',
-              borderRadius: '12px',
-              background: 'rgba(255, 255, 255, 0.1)',
-              width: '64px',
-              height: '64px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <svg
-              viewBox="0 0 100 100"
-              width="32px"
-              height="32px"
-              fill="#c80000"
-              xmlns="http://www.w3.org/2000/svg"
+          {!isRecording ? (
+            <button
+              onClick={startRecording}
+              title="Start Recording"
+              style={{
+                outline: 'none',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                color: 'white',
+                borderRadius: '50%',
+                background: 'rgba(200, 0, 0, 0.15)',
+                backdropFilter: 'blur(8px)',
+                width: '72px',
+                height: '72px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'all 0.2s ease',
+              }}
+              onMouseOver={(e) => (e.currentTarget.style.background = 'rgba(200, 0, 0, 0.25)')}
+              onMouseOut={(e) => (e.currentTarget.style.background = 'rgba(200, 0, 0, 0.15)')}
             >
-              <circle cx="50" cy="50" r="50" />
-            </svg>
-          </button>
-        ) : (
-          <button
-            onClick={stopRecording}
-            style={{
-              outline: 'none',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              color: 'white',
-              borderRadius: '12px',
-              background: 'rgba(255, 255, 255, 0.1)',
-              width: '64px',
-              height: '64px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <svg
-              viewBox="0 0 100 100"
-              width="32px"
-              height="32px"
-              fill="#000000"
-              xmlns="http://www.w3.org/2000/svg"
+              <svg
+                viewBox="0 0 100 100"
+                width="28px"
+                height="28px"
+                fill="#ff4444"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle cx="50" cy="50" r="50" />
+              </svg>
+            </button>
+          ) : (
+            <button
+              onClick={stopRecording}
+              title="Stop Recording"
+              style={{
+                outline: 'none',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                color: 'white',
+                borderRadius: '50%',
+                background: 'rgba(255, 255, 255, 0.15)',
+                backdropFilter: 'blur(8px)',
+                width: '72px',
+                height: '72px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'all 0.2s ease',
+              }}
             >
-              <rect x="0" y="0" width="100" height="100" rx="15" />
-            </svg>
-          </button>
-        )}
-      </div>
+              <svg
+                viewBox="0 0 100 100"
+                width="24px"
+                height="24px"
+                fill="white"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect x="0" y="0" width="100" height="100" rx="15" />
+              </svg>
+            </button>
+          )}
+        </div>
 
-      <div
-        id="captions"
-        style={{
-          position: 'absolute',
-          bottom: '22vh',
-          left: '5vw',
-          right: '5vw',
-          zIndex: 10,
-          textAlign: 'center',
-          pointerEvents: 'none',
-        }}
-      >
         <div
+          id="status"
           style={{
-            fontFamily: "'Inter', system-ui, sans-serif",
-            fontSize: '1.25rem',
-            lineHeight: '1.6',
-            padding: '8px 16px',
-            borderRadius: '8px',
-            maxWidth: '80%',
-            margin: '0 auto',
-            transition: 'opacity 0.3s ease',
-            color: '#a8d8ff',
-            background: 'rgba(168, 216, 255, 0.1)',
-            display: userTranscript ? 'block' : 'none',
+            color: 'rgba(255, 255, 255, 0.7)',
+            fontSize: '0.9rem',
+            textAlign: 'center',
+            minHeight: '1.2em',
+            fontWeight: 500,
+            letterSpacing: '0.02em',
           }}
         >
-          {userTranscript}
+          {error || status}
         </div>
-        <div
-          style={{
-            fontFamily: "'Inter', system-ui, sans-serif",
-            fontSize: '1.25rem',
-            lineHeight: '1.6',
-            padding: '8px 16px',
-            borderRadius: '8px',
-            maxWidth: '80%',
-            margin: '0 auto',
-            transition: 'opacity 0.3s ease',
-            color: '#ffd6a8',
-            background: 'rgba(255, 214, 168, 0.1)',
-            display: agentTranscript ? 'block' : 'none',
-            marginTop: '10px',
-          }}
-        >
-          {agentTranscript}
-        </div>
-      </div>
-
-      <div
-        id="status"
-        style={{
-          position: 'absolute',
-          bottom: '5vh',
-          left: 0,
-          right: 0,
-          zIndex: 10,
-          textAlign: 'center',
-          color: 'white',
-          fontFamily: 'system-ui, sans-serif',
-        }}
-      >
-        {error || status}
       </div>
     </div>
   );
