@@ -14,10 +14,31 @@ import {
   listForms,
   searchForms,
 } from './catalog';
-import { companyInfo } from './company';
 import { systemInstruction } from './system';
 import { createBlob, decode, decodeAudioData } from './utils';
 import LiveAudioVisuals3D from './LiveAudioVisuals3D';
+
+interface ListFormsArgs {
+  category?: string;
+  query?: string;
+}
+
+interface GetFormArgs {
+  formId: string;
+}
+
+interface SearchFormsArgs {
+  query?: string;
+  category?: string;
+  limit?: number;
+  offset?: number;
+}
+
+declare global {
+  interface Window {
+    webkitAudioContext: typeof AudioContext;
+  }
+}
 
 export default function LiveAudio() {
   const [isRecording, setIsRecording] = useState(false);
@@ -46,10 +67,10 @@ export default function LiveAudio() {
     if (typeof window === 'undefined') return;
 
     inputAudioContextRef.current = new (
-      window.AudioContext || (window as any).webkitAudioContext
+      window.AudioContext || window.webkitAudioContext
     )({ sampleRate: 16000 });
     outputAudioContextRef.current = new (
-      window.AudioContext || (window as any).webkitAudioContext
+      window.AudioContext || window.webkitAudioContext
     )({ sampleRate: 24000 });
 
     inputNodeRef.current = inputAudioContextRef.current.createGain();
@@ -107,15 +128,17 @@ export default function LiveAudio() {
                 (toolCall.functionCalls || []).map(async (fc) => {
                   try {
                     if (fc.name === 'list_forms') {
-                      const { category, query } = fc.args as any;
+                      const { category, query } =
+                        fc.args as unknown as ListFormsArgs;
                       const result = await listForms(category, query);
                       return { id: fc.id, name: fc.name, response: { result } };
                     } else if (fc.name === 'get_form') {
-                      const { formId } = fc.args as any;
+                      const { formId } = fc.args as unknown as GetFormArgs;
                       const result = await getForm(formId);
                       return { id: fc.id, name: fc.name, response: { result } };
                     } else if (fc.name === 'search_forms') {
-                      const { query, category, limit, offset } = fc.args as any;
+                      const { query, category, limit, offset } =
+                        fc.args as unknown as SearchFormsArgs;
                       const result = await searchForms(
                         query,
                         category,
@@ -124,11 +147,13 @@ export default function LiveAudio() {
                       );
                       return { id: fc.id, name: fc.name, response: { result } };
                     }
-                  } catch (e: any) {
+                  } catch (e: unknown) {
                     return {
                       id: fc.id,
                       name: fc.name,
-                      response: { error: e.message },
+                      response: {
+                        error: e instanceof Error ? e.message : String(e),
+                      },
                     };
                   }
                   return {
@@ -199,10 +224,14 @@ export default function LiveAudio() {
               setAgentTranscript('');
             }
           },
-          onerror: (e: any) => {
-            setError(e.message || 'An error occurred');
+          onerror: (e) => {
+            setError(
+              e instanceof Error
+                ? e.message
+                : (e as { message?: string })?.message || String(e),
+            );
           },
-          onclose: (e: any) => {
+          onclose: (e) => {
             setStatus('Close:' + (e.reason || ''));
           },
         },
@@ -217,9 +246,9 @@ export default function LiveAudio() {
           },
         },
       });
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error(e);
-      setError(e.message || 'Failed to initialize session');
+      setError(e instanceof Error ? e.message : 'Failed to initialize session');
     }
   };
 
@@ -271,9 +300,11 @@ export default function LiveAudio() {
       setIsRecording(true);
       isRecordingRef.current = true;
       setStatus('🔴 Recording... Capturing PCM chunks.');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error starting recording:', err);
-      setStatus(`Error: ${err.message}`);
+      setStatus(
+        `Error: ${err instanceof Error ? err.message : 'Unknown error'}`,
+      );
       stopRecording();
     }
   };

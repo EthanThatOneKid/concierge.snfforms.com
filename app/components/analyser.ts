@@ -19,7 +19,7 @@ export class Analyser {
   }
 
   update() {
-    this.analyser.getByteFrequencyData(this.dataArray as any);
+    this.analyser.getByteFrequencyData(this.dataArray as unknown as Uint8Array);
   }
 
   get data() {
