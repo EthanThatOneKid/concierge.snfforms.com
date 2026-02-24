@@ -97,11 +97,24 @@ export default function LiveAudioVisuals3D({ inputNode, outputNode }: Props) {
     sphere.visible = false;
 
     new THREE.TextureLoader().load('/artwork.png', (texture) => {
-      texture.mapping = THREE.EquirectangularReflectionMapping;
-      texture.colorSpace = THREE.SRGBColorSpace;
-      const exrCubeRenderTarget = pmremGenerator.fromEquirectangular(texture);
+      const img = texture.image;
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.translate(canvas.width, 0);
+        ctx.scale(-1, 1);
+        ctx.drawImage(img, 0, 0);
+      }
+      const flippedTexture = new THREE.CanvasTexture(canvas);
+      flippedTexture.mapping = THREE.EquirectangularReflectionMapping;
+      flippedTexture.colorSpace = THREE.SRGBColorSpace;
+      const exrCubeRenderTarget =
+        pmremGenerator.fromEquirectangular(flippedTexture);
       sphereMaterial.envMap = exrCubeRenderTarget.texture;
       sphere.visible = true;
+      texture.dispose();
     });
 
     const renderPass = new RenderPass(scene, camera);
