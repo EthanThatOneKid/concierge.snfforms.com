@@ -1,8 +1,9 @@
 import { MetadataRoute } from 'next';
+import { companyInfo } from './components/company';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'SNF Printing AI Voice Concierge',
+    name: `${companyInfo.name} AI Voice Concierge`,
     short_name: 'SNF Concierge',
     description:
       'Interact with our AI Voice Concierge to find medical forms and supplies with ease.',

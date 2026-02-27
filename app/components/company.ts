@@ -13,14 +13,17 @@ export const companyInfo = {
     address: '15532 Computer Lane',
     city: 'Huntington Beach',
     state: 'CA',
+    zip: '92649',
+    country: 'US',
     fullAddress: '15532 Computer Lane, Huntington Beach, CA',
   },
   contact: {
-    email: 'sales@snfforms.com',
+    email: 'sales@snfprinting.com',
     phone: '(714) 901-6868',
     fax: '(714) 901-6858',
   },
-  website: 'https://snfforms.vercel.app/',
+  logo: 'https://snfforms.vercel.app/logo.png',
+  website: 'https://snfforms.com',
   mission:
     'Our role is to efficiently provide product on call so that our valued clients can do their jobs without delay.',
 };

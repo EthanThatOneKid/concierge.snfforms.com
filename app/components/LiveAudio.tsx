@@ -17,6 +17,7 @@ import {
 import { systemInstruction } from './system';
 import { createBlob, decode, decodeAudioData } from './utils';
 import LiveAudioVisuals3D from './LiveAudioVisuals3D';
+import { companyInfo } from './company';
 
 interface ListFormsArgs {
   category?: string;
@@ -462,7 +463,7 @@ export default function LiveAudio() {
           {!isRecording ? (
             <button
               onClick={startRecording}
-              title="Call SNF Printing"
+              title={`Call ${companyInfo.name}`}
               style={{
                 outline: 'none',
                 border: '1px solid rgba(75, 255, 75, 0.2)',

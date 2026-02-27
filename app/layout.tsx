@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
+import { companyInfo } from './components/company';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -14,25 +15,24 @@ const geistMono = Geist_Mono({
 const organizationJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'LocalBusiness',
-  '@id': 'https://snfforms.com',
-  name: 'SNF Printing',
-  url: 'https://snfforms.com',
-  logo: 'https://snfforms.vercel.app/logo.png',
-  description:
-    'Precision printing and easy access to medical forms and supplies for the healthcare industry.',
+  '@id': companyInfo.website,
+  name: companyInfo.name,
+  url: companyInfo.website,
+  logo: companyInfo.logo,
+  description: companyInfo.description,
   address: {
     '@type': 'PostalAddress',
-    streetAddress: '15532 Computer Lane',
-    addressLocality: 'Huntington Beach',
-    addressRegion: 'CA',
-    postalCode: '92649',
-    addressCountry: 'US',
+    streetAddress: companyInfo.location.address,
+    addressLocality: companyInfo.location.city,
+    addressRegion: companyInfo.location.state,
+    postalCode: companyInfo.location.zip,
+    addressCountry: companyInfo.location.country,
   },
   contactPoint: {
     '@type': 'ContactPoint',
-    telephone: '+1-714-901-6868',
+    telephone: `+1-${companyInfo.contact.phone.replace(/[() ]/g, '')}`,
     contactType: 'customer service',
-    email: 'sales@snfforms.com',
+    email: companyInfo.contact.email,
   },
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
@@ -43,11 +43,10 @@ const organizationJsonLd = {
 const softwareAppJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
-  name: 'SNF Printing AI Voice Concierge',
+  name: `${companyInfo.name} AI Voice Concierge`,
   url: 'https://concierge.snfforms.com',
   image: 'https://concierge.snfforms.com/brand-logo.png',
-  description:
-    'An AI-powered voice concierge that helps healthcare professionals find and order medical forms and supplies from SNF Printing with real-time voice interaction.',
+  description: `An AI-powered voice concierge that helps healthcare professionals find and order medical forms and supplies from ${companyInfo.name} with real-time voice interaction.`,
   applicationCategory: 'BusinessApplication',
   operatingSystem: 'Web',
   offers: {

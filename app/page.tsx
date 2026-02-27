@@ -1,21 +1,21 @@
 import React from 'react';
 import { Metadata } from 'next';
 import LiveAudio from './components/LiveAudio';
+import { companyInfo } from './components/company';
 
 export const metadata: Metadata = {
-  title: 'AI Voice Concierge | SNF Printing',
-  description:
-    'Precision printing and easy access to medical forms and supplies for the healthcare industry.',
+  title: `AI Voice Concierge | ${companyInfo.name}`,
+  description: companyInfo.description,
   icons: {
     icon: '/brand-logo.png',
     shortcut: '/brand-logo.png',
     apple: '/brand-logo.png',
   },
   openGraph: {
-    title: 'SNF Printing AI Voice Concierge',
+    title: `${companyInfo.name} AI Voice Concierge`,
     description:
       'Interact with our AI Voice Concierge to find medical forms and supplies with ease.',
-    siteName: 'SNF Printing',
+    siteName: companyInfo.name,
     locale: 'en_US',
     type: 'website',
   },
