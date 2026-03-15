@@ -24,6 +24,15 @@ SNF Forms Concierge is an AI-powered voice assistant designed for [SNF Printing]
 - **Security:** Server-side token provisioning via Next.js Route Handlers.
 - **Language:** [TypeScript](https://www.typescriptlang.org/)
 
+## Prompt Engineering & Customization
+
+The core prompt and company context are decoupled for easy customization. You can find and modify the prompt engineering within the codebase:
+
+- **[`app/components/system.ts`](./app/components/system.ts)**: Contains the core system instructions, defining the AI's identity, tone, tool usage rules, and behavioral boundaries using XML-like tags.
+- **[`app/components/company.ts`](./app/components/company.ts)**: Stores all the customizable business parameters (name, history, mission, contact info, etc.) which are dynamically injected into the system instructions.
+
+To repurpose this concierge for a different business, you mainly need to update the variables in [`app/components/company.ts`](./app/components/company.ts). To change the underlying behavior or instructions of the assistant, edit [`app/components/system.ts`](./app/components/system.ts).
+
 ## Getting Started
 
 ### Prerequisites
