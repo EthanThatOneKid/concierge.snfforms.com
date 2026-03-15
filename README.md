@@ -15,7 +15,7 @@ SNF Forms Concierge is an AI-powered voice assistant designed for [SNF Printing]
 - **Live Transcriptions:** Real-time display of both user and agent speech for better accessibility and clarity.
 - **Company Context:** Pre-configured with deep knowledge of SNF Printing's history, mission, and contact information.
 
-## Tech Stack
+## Tech stack
 
 - **Framework:** [Next.js 15+](https://nextjs.org/) (App Router)
 - **Frontend library:** [React 19](https://react.dev/)
@@ -24,7 +24,7 @@ SNF Forms Concierge is an AI-powered voice assistant designed for [SNF Printing]
 - **Security:** Server-side token provisioning via Next.js Route Handlers.
 - **Language:** [TypeScript](https://www.typescriptlang.org/)
 
-## Prompt Engineering & Customization
+## Prompt engineering & customization
 
 The core prompt and company context are decoupled for easy customization. You can find and modify the prompt engineering within the codebase:
 
@@ -33,7 +33,7 @@ The core prompt and company context are decoupled for easy customization. You ca
 
 To repurpose this concierge for a different business, you mainly need to update the variables in [`app/components/company.ts`](./app/components/company.ts). To change the underlying behavior or instructions of the assistant, edit [`app/components/system.ts`](./app/components/system.ts).
 
-## Getting Started
+## Getting started
 
 ### Prerequisites
 
